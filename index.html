@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Lawrellie Cay, Will you be my Valentine?</title>
+  <title>Be My Valentine?</title>
 
   <style>
     :root{
@@ -17,6 +17,7 @@
     *{box-sizing:border-box}
     html,body{height:100%}
 
+    /* Heart cursor (no images needed) */
     body{
       margin:0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -25,6 +26,10 @@
         radial-gradient(1000px 700px at 80% 70%, var(--bg2), transparent 55%),
         linear-gradient(135deg, #fff1f2, #ffd6e0);
       overflow:hidden;
+      cursor: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'>\
+<path d='M16 28 C16 28 3 20 3 12 C3 8 6 5 10 5 C13 5 15 7 16 9 C17 7 19 5 22 5 C26 5 29 8 29 12 C29 20 16 28 16 28 Z' fill='%23ff4d6d'/>\
+</svg>") 16 16, auto;
     }
 
     #confettiCanvas{
@@ -36,12 +41,49 @@
       z-index:999;
     }
 
+    /* Moving hearts background layer */
+    .bg-hearts{
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      z-index:1;
+      overflow:hidden;
+    }
+    .heart{
+      position:absolute;
+      width:14px;
+      height:14px;
+      transform: rotate(45deg);
+      background:#ff4d6d;
+      border-radius:3px;
+      opacity:.22;
+      animation: floatUp linear infinite;
+      filter: blur(.2px);
+    }
+    .heart::before, .heart::after{
+      content:"";
+      position:absolute;
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      background:#ff4d6d;
+    }
+    .heart::before{ left:-7px; top:0; }
+    .heart::after { left:0; top:-7px; }
+
+    @keyframes floatUp{
+      from{ transform: translateY(120vh) rotate(45deg); }
+      to  { transform: translateY(-140vh) rotate(45deg); }
+    }
+
     .wrap{
       min-height:100%;
       display:flex;
       align-items:center;
       justify-content:center;
       padding:24px;
+      position:relative;
+      z-index:2; /* above background hearts */
     }
 
     .card{
@@ -81,7 +123,7 @@
       gap:14px;
       position:relative;
       margin-top:14px;
-      height:86px; /* gives the No button room to dodge */
+      height:86px;
     }
 
     button{
@@ -136,59 +178,63 @@
 </head>
 
 <body>
-<canvas id="confettiCanvas"></canvas>
+  <!-- Confetti on top -->
+  <canvas id="confettiCanvas"></canvas>
 
-<div class="wrap">
-  <main class="card">
-    <h1>Lawrellie Cay, will you be my Valentine? 💛</h1>
-    <p>There is a correct answer. Choose wisely.</p>
+  <!-- Floating hearts background -->
+  <div class="bg-hearts" id="bgHearts" aria-hidden="true"></div>
 
-    <!-- MINION WITH HEART (Simple SVG) -->
-    <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-label="Cute minion holding a heart">
-      <ellipse cx="160" cy="210" rx="90" ry="14" fill="#000" opacity="0.15"/>
-      <rect x="110" y="60" rx="40" ry="40" width="100" height="120" fill="#FFD93D"/>
-      <rect x="110" y="120" width="100" height="60" rx="20" fill="#3B82F6"/>
-      <rect x="110" y="120" width="100" height="20" fill="#2563EB"/>
+  <div class="wrap">
+    <main class="card">
+      <h1>Lawrellie Cay, will you be my Valentine? 💛</h1>
+      <p>There is a correct answer. Choose wisely.</p>
 
-      <rect x="80" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
-      <rect x="210" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
-      <circle cx="80" cy="120" r="8" fill="#1F2937"/>
-      <circle cx="240" cy="120" r="8" fill="#1F2937"/>
+      <!-- MINION WITH HEART -->
+      <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-label="Cute minion holding a heart">
+        <ellipse cx="160" cy="210" rx="90" ry="14" fill="#000" opacity="0.15"/>
+        <rect x="110" y="60" rx="40" ry="40" width="100" height="120" fill="#FFD93D"/>
+        <rect x="110" y="120" width="100" height="60" rx="20" fill="#3B82F6"/>
+        <rect x="110" y="120" width="100" height="20" fill="#2563EB"/>
 
-      <rect x="95" y="78" width="130" height="18" fill="#374151"/>
-      <circle cx="160" cy="90" r="26" fill="#D1D5DB"/>
-      <circle cx="160" cy="90" r="20" fill="#F9FAFB"/>
-      <circle cx="160" cy="92" r="10" fill="#1F2937"/>
-      <circle cx="164" cy="88" r="3" fill="#fff"/>
+        <rect x="80" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
+        <rect x="210" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
+        <circle cx="80" cy="120" r="8" fill="#1F2937"/>
+        <circle cx="240" cy="120" r="8" fill="#1F2937"/>
 
-      <path d="M145 115 Q160 125 175 115" stroke="#1F2937" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <rect x="95" y="78" width="130" height="18" fill="#374151"/>
+        <circle cx="160" cy="90" r="26" fill="#D1D5DB"/>
+        <circle cx="160" cy="90" r="20" fill="#F9FAFB"/>
+        <circle cx="160" cy="92" r="10" fill="#1F2937"/>
+        <circle cx="164" cy="88" r="3" fill="#fff"/>
 
-      <path d="M160 140
-               C160 130,135 130,135 150
-               C135 170,160 185,160 185
-               C160 185,185 170,185 150
-               C185 130,160 130,160 140Z"
-            fill="#FF4D6D"/>
+        <path d="M145 115 Q160 125 175 115" stroke="#1F2937" stroke-width="4" fill="none" stroke-linecap="round"/>
 
-      <rect x="135" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
-      <rect x="167" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
-      <ellipse cx="144" cy="210" rx="16" ry="6" fill="#111827"/>
-      <ellipse cx="176" cy="210" rx="16" ry="6" fill="#111827"/>
-    </svg>
+        <path d="M160 140
+                 C160 130,135 130,135 150
+                 C135 170,160 185,160 185
+                 C160 185,185 170,185 150
+                 C185 130,160 130,160 140Z"
+              fill="#FF4D6D"/>
 
-    <section class="zone" id="zone">
-      <button id="yesBtn">Yes 💖</button>
-      <button id="noBtn">No</button>
-    </section>
+        <rect x="135" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
+        <rect x="167" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
+        <ellipse cx="144" cy="210" rx="16" ry="6" fill="#111827"/>
+        <ellipse cx="176" cy="210" rx="16" ry="6" fill="#111827"/>
+      </svg>
 
-    <div class="hint" id="hint">“No” seems a bit shy 😈</div>
+      <section class="zone" id="zone">
+        <button id="yesBtn">Yes 💖</button>
+        <button id="noBtn">No</button>
+      </section>
 
-    <section class="result" id="result">
-      <h2>YAY! 🎉</h2>
-      <p>You’re officially my Valentine 💘</p>
-    </section>
-  </main>
-</div>
+      <div class="hint" id="hint">“No” seems a bit shy 😈</div>
+
+      <section class="result" id="result">
+        <h2>YAY! 🎉</h2>
+        <p>You’re officially my Valentine 💘</p>
+      </section>
+    </main>
+  </div>
 
 <script>
   const yesBtn = document.getElementById("yesBtn");
@@ -197,7 +243,28 @@
   const hint   = document.getElementById("hint");
   const result = document.getElementById("result");
 
-  /* ---------- HINTS ---------- */
+  /* ---------- Moving hearts background ---------- */
+  const bg = document.getElementById("bgHearts");
+  const HEARTS_COUNT = 22;
+
+  for (let i = 0; i < HEARTS_COUNT; i++) {
+    const h = document.createElement("div");
+    h.className = "heart";
+    const left = Math.random() * 100;
+    const dur = 7 + Math.random() * 10;
+    const delay = Math.random() * 5;
+    const scale = 0.7 + Math.random() * 1.6;
+
+    h.style.left = left + "%";
+    h.style.animationDuration = dur + "s";
+    h.style.animationDelay = delay + "s";
+    h.style.opacity = (0.10 + Math.random() * 0.28).toFixed(2);
+    h.style.transform = `translateY(120vh) rotate(45deg) scale(${scale})`;
+
+    bg.appendChild(h);
+  }
+
+  /* ---------- Hints ---------- */
   let noCount = 0;
   const hints = [
     "“No” seems a bit shy 😈",
@@ -207,7 +274,12 @@
     "That green button looks amazing right now 👀"
   ];
 
-  /* ---------- CONFETTI ---------- */
+  function updateHint() {
+    hint.textContent = hints[Math.min(noCount, hints.length - 1)];
+    noCount++;
+  }
+
+  /* ---------- Confetti ---------- */
   const confettiCanvas = document.getElementById("confettiCanvas");
   const ctx = confettiCanvas.getContext("2d");
   let confetti = [];
@@ -222,7 +294,7 @@
   resizeConfettiCanvas();
 
   function makeConfettiBurst() {
-    const count = 220;
+    const count = 240;
     for (let i = 0; i < count; i++) {
       confetti.push({
         x: window.innerWidth / 2,
@@ -233,7 +305,7 @@
         r: 3 + Math.random() * 5,
         rot: Math.random() * Math.PI,
         vr: (Math.random() - 0.5) * 0.35,
-        life: 140 + Math.random() * 60,
+        life: 160 + Math.random() * 70,
         hue: Math.floor(Math.random() * 360)
       });
     }
@@ -269,12 +341,7 @@
     confettiLoop();
   }
 
-  /* ---------- NO BUTTON: SLIPS AWAY FROM CURSOR ---------- */
-  function updateHint() {
-    hint.textContent = hints[Math.min(noCount, hints.length - 1)];
-    noCount++;
-  }
-
+  /* ---------- NO button slips away from cursor ---------- */
   function moveNo() {
     const zoneRect = zone.getBoundingClientRect();
     const btnRect  = noBtn.getBoundingClientRect();
@@ -287,14 +354,12 @@
 
     noBtn.style.left = x + "px";
     noBtn.style.top  = y + "px";
-
     updateHint();
   }
 
-  // Run away when cursor gets close (desktop)
   document.addEventListener("mousemove", (e) => {
     const rect = noBtn.getBoundingClientRect();
-    const buffer = 90; // how close before it flees
+    const buffer = 90;
 
     const close =
       e.clientX > rect.left - buffer &&
@@ -305,19 +370,17 @@
     if (close) moveNo();
   });
 
-  // Also run away on mobile taps
   noBtn.addEventListener("touchstart", (e) => {
     e.preventDefault();
     moveNo();
   }, { passive: false });
 
-  // Extra: if they somehow click it, it still runs
   noBtn.addEventListener("click", (e) => {
     e.preventDefault();
     moveNo();
   });
 
-  /* ---------- YES CLICK ---------- */
+  /* ---------- YES click: show result + confetti ---------- */
   yesBtn.addEventListener("click", () => {
     zone.style.display = "none";
     hint.style.display = "none";
@@ -326,8 +389,9 @@
     fullScreenConfetti();
   });
 
-  // Place the "No" button somewhere random at start
+  // Randomize No position on load
   moveNo();
 </script>
+
 </body>
 </html>
