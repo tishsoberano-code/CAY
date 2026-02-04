@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Be My Valentine?</title>
+  <title>Lawrellie Cay, Will you be my Valentine?</title>
 
   <style>
     :root{
@@ -11,8 +11,6 @@
       --bg2:#ee9ca7;
       --card:#ffffffcc;
       --text:#2b2b2b;
-      --yes:#22c55e;
-      --no:#ef4444;
       --shadow: 0 18px 60px rgba(0,0,0,.18);
     }
 
@@ -32,6 +30,8 @@
     #confettiCanvas{
       position:fixed;
       inset:0;
+      width:100vw;
+      height:100vh;
       pointer-events:none;
       z-index:999;
     }
@@ -48,10 +48,13 @@
       width:min(720px, 95vw);
       background:var(--card);
       backdrop-filter: blur(10px);
+      border:1px solid rgba(255,255,255,.6);
       border-radius:24px;
       box-shadow:var(--shadow);
       padding:28px 22px;
       text-align:center;
+      position:relative;
+      overflow:hidden;
     }
 
     h1{
@@ -61,22 +64,24 @@
 
     p{
       opacity:.85;
-      margin-bottom:16px;
+      margin: 0 0 16px;
     }
 
     .art{
       width:min(280px, 70vw);
-      margin:10px auto;
+      margin:10px auto 6px;
       display:block;
+      filter: drop-shadow(0 12px 22px rgba(0,0,0,.12));
     }
 
     .zone{
       display:flex;
       justify-content:center;
+      align-items:center;
       gap:14px;
       position:relative;
       margin-top:14px;
-      height:80px;
+      height:86px; /* gives the No button room to dodge */
     }
 
     button{
@@ -87,7 +92,11 @@
       cursor:pointer;
       font-size:16px;
       box-shadow:0 10px 24px rgba(0,0,0,.15);
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+      -webkit-tap-highlight-color: transparent;
     }
+    button:active{transform:scale(.96)}
 
     #yesBtn{
       background:linear-gradient(180deg,#34d399,#16a34a);
@@ -98,7 +107,8 @@
       background:linear-gradient(180deg,#fb7185,#ef4444);
       color:#fff;
       position:absolute;
-      right:0;
+      left: 60%;
+      top: 18px;
     }
 
     .hint{
@@ -107,17 +117,21 @@
       padding:10px 14px;
       border-radius:999px;
       background:rgba(0,0,0,.05);
+      border:1px dashed rgba(0,0,0,.14);
       display:inline-block;
     }
 
     .result{
       display:none;
       margin-top:16px;
+      padding-top:4px;
     }
 
     .result h2{
-      font-size:32px;
+      margin:0 0 8px;
+      font-size: clamp(26px, 4vw, 36px);
     }
+    .result p{margin:0 0 10px;}
   </style>
 </head>
 
@@ -125,89 +139,195 @@
 <canvas id="confettiCanvas"></canvas>
 
 <div class="wrap">
-<main class="card">
+  <main class="card">
+    <h1>will you be my valentine? 💛</h1>
+    <p>There is a correct answer. Choose wisely.</p>
 
-<h1>will you be my valentine? 💛</h1>
-<p>There is a correct answer. Choose wisely.</p>
+    <!-- MINION WITH HEART (Simple SVG) -->
+    <svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg" aria-label="Cute minion holding a heart">
+      <ellipse cx="160" cy="210" rx="90" ry="14" fill="#000" opacity="0.15"/>
+      <rect x="110" y="60" rx="40" ry="40" width="100" height="120" fill="#FFD93D"/>
+      <rect x="110" y="120" width="100" height="60" rx="20" fill="#3B82F6"/>
+      <rect x="110" y="120" width="100" height="20" fill="#2563EB"/>
 
-<!-- MINION WITH HEART -->
-<svg class="art" viewBox="0 0 320 240" xmlns="http://www.w3.org/2000/svg">
-  <ellipse cx="160" cy="210" rx="90" ry="14" fill="#000" opacity="0.15"/>
-  <rect x="110" y="60" rx="40" ry="40" width="100" height="120" fill="#FFD93D"/>
-  <rect x="110" y="120" width="100" height="60" rx="20" fill="#3B82F6"/>
-  <rect x="110" y="120" width="100" height="20" fill="#2563EB"/>
+      <rect x="80" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
+      <rect x="210" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
+      <circle cx="80" cy="120" r="8" fill="#1F2937"/>
+      <circle cx="240" cy="120" r="8" fill="#1F2937"/>
 
-  <rect x="80" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
-  <rect x="210" y="110" width="30" height="18" rx="9" fill="#FFD93D"/>
-  <circle cx="80" cy="120" r="8" fill="#1F2937"/>
-  <circle cx="240" cy="120" r="8" fill="#1F2937"/>
+      <rect x="95" y="78" width="130" height="18" fill="#374151"/>
+      <circle cx="160" cy="90" r="26" fill="#D1D5DB"/>
+      <circle cx="160" cy="90" r="20" fill="#F9FAFB"/>
+      <circle cx="160" cy="92" r="10" fill="#1F2937"/>
+      <circle cx="164" cy="88" r="3" fill="#fff"/>
 
-  <rect x="95" y="78" width="130" height="18" fill="#374151"/>
-  <circle cx="160" cy="90" r="26" fill="#D1D5DB"/>
-  <circle cx="160" cy="90" r="20" fill="#F9FAFB"/>
-  <circle cx="160" cy="92" r="10" fill="#1F2937"/>
-  <circle cx="164" cy="88" r="3" fill="#fff"/>
+      <path d="M145 115 Q160 125 175 115" stroke="#1F2937" stroke-width="4" fill="none" stroke-linecap="round"/>
 
-  <path d="M145 115 Q160 125 175 115" stroke="#1F2937" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M160 140
+               C160 130,135 130,135 150
+               C135 170,160 185,160 185
+               C160 185,185 170,185 150
+               C185 130,160 130,160 140Z"
+            fill="#FF4D6D"/>
 
-  <path d="M160 140
-           C160 130,135 130,135 150
-           C135 170,160 185,160 185
-           C160 185,185 170,185 150
-           C185 130,160 130,160 140Z"
-        fill="#FF4D6D"/>
+      <rect x="135" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
+      <rect x="167" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
+      <ellipse cx="144" cy="210" rx="16" ry="6" fill="#111827"/>
+      <ellipse cx="176" cy="210" rx="16" ry="6" fill="#111827"/>
+    </svg>
 
-  <rect x="135" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
-  <rect x="167" y="180" width="18" height="26" rx="6" fill="#1F2937"/>
-</svg>
+    <section class="zone" id="zone">
+      <button id="yesBtn">Yes 💖</button>
+      <button id="noBtn">No</button>
+    </section>
 
-<section class="zone" id="zone">
-  <button id="yesBtn">Yes 💖</button>
-  <button id="noBtn">No</button>
-</section>
+    <div class="hint" id="hint">“No” seems a bit shy 😈</div>
 
-<div class="hint" id="hint">“No” seems a bit shy 😈</div>
-
-<section class="result" id="result">
-  <h2>YAY! 🎉</h2>
-  <p>You’re officially my Valentine 💘</p>
-</section>
-
-</main>
+    <section class="result" id="result">
+      <h2>YAY! 🎉</h2>
+      <p>You’re officially my Valentine 💘</p>
+    </section>
+  </main>
 </div>
 
 <script>
-const noBtn = document.getElementById("noBtn");
-const yesBtn = document.getElementById("yesBtn");
-const zone = document.getElementById("zone");
-const hint = document.getElementById("hint");
-const result = document.getElementById("result");
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn  = document.getElementById("noBtn");
+  const zone   = document.getElementById("zone");
+  const hint   = document.getElementById("hint");
+  const result = document.getElementById("result");
 
-const hints = [
-  "“No” seems a bit shy 😈",
-  "Try again 😏",
-  "That button is slippery",
-  "You know what to click",
-  "Correct answer is glowing green 👀"
-];
+  /* ---------- HINTS ---------- */
+  let noCount = 0;
+  const hints = [
+    "“No” seems a bit shy 😈",
+    "Nice try. Not today. 😏",
+    "It’s giving… incorrect. 🙃",
+    "Stop chasing me. (Actually don’t.) 😂",
+    "That green button looks amazing right now 👀"
+  ];
 
-let count = 0;
+  /* ---------- CONFETTI ---------- */
+  const confettiCanvas = document.getElementById("confettiCanvas");
+  const ctx = confettiCanvas.getContext("2d");
+  let confetti = [];
+  let confettiRunning = false;
 
-function moveNo(){
-  noBtn.style.left = Math.random()*60 + "%";
-  hint.textContent = hints[Math.min(count++, hints.length-1)];
-}
+  function resizeConfettiCanvas() {
+    confettiCanvas.width  = window.innerWidth * devicePixelRatio;
+    confettiCanvas.height = window.innerHeight * devicePixelRatio;
+    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  }
+  window.addEventListener("resize", resizeConfettiCanvas);
+  resizeConfettiCanvas();
 
-noBtn.addEventListener("mouseenter", moveNo);
-noBtn.addEventListener("click", moveNo);
+  function makeConfettiBurst() {
+    const count = 220;
+    for (let i = 0; i < count; i++) {
+      confetti.push({
+        x: window.innerWidth / 2,
+        y: window.innerHeight * 0.25,
+        vx: (Math.random() - 0.5) * 14,
+        vy: Math.random() * -12 - 6,
+        g: 0.35 + Math.random() * 0.25,
+        r: 3 + Math.random() * 5,
+        rot: Math.random() * Math.PI,
+        vr: (Math.random() - 0.5) * 0.35,
+        life: 140 + Math.random() * 60,
+        hue: Math.floor(Math.random() * 360)
+      });
+    }
+  }
 
-yesBtn.addEventListener("click", ()=>{
-  zone.style.display="none";
-  hint.style.display="none";
-  result.style.display="block";
-});
+  function confettiLoop() {
+    if (!confettiRunning) return;
+
+    ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    confetti = confetti.filter(p => p.life-- > 0);
+
+    for (const p of confetti) {
+      p.vy += p.g;
+      p.x += p.vx;
+      p.y += p.vy;
+      p.rot += p.vr;
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.fillStyle = `hsl(${p.hue} 90% 60%)`;
+      ctx.fillRect(-p.r, -p.r, p.r * 2.2, p.r * 1.2);
+      ctx.restore();
+    }
+
+    if (confetti.length === 0) confettiRunning = false;
+    requestAnimationFrame(confettiLoop);
+  }
+
+  function fullScreenConfetti() {
+    confettiRunning = true;
+    makeConfettiBurst();
+    confettiLoop();
+  }
+
+  /* ---------- NO BUTTON: SLIPS AWAY FROM CURSOR ---------- */
+  function updateHint() {
+    hint.textContent = hints[Math.min(noCount, hints.length - 1)];
+    noCount++;
+  }
+
+  function moveNo() {
+    const zoneRect = zone.getBoundingClientRect();
+    const btnRect  = noBtn.getBoundingClientRect();
+
+    const maxX = Math.max(0, zoneRect.width  - btnRect.width);
+    const maxY = Math.max(0, zoneRect.height - btnRect.height);
+
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+
+    updateHint();
+  }
+
+  // Run away when cursor gets close (desktop)
+  document.addEventListener("mousemove", (e) => {
+    const rect = noBtn.getBoundingClientRect();
+    const buffer = 90; // how close before it flees
+
+    const close =
+      e.clientX > rect.left - buffer &&
+      e.clientX < rect.right + buffer &&
+      e.clientY > rect.top - buffer &&
+      e.clientY < rect.bottom + buffer;
+
+    if (close) moveNo();
+  });
+
+  // Also run away on mobile taps
+  noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveNo();
+  }, { passive: false });
+
+  // Extra: if they somehow click it, it still runs
+  noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    moveNo();
+  });
+
+  /* ---------- YES CLICK ---------- */
+  yesBtn.addEventListener("click", () => {
+    zone.style.display = "none";
+    hint.style.display = "none";
+    result.style.display = "block";
+    resizeConfettiCanvas();
+    fullScreenConfetti();
+  });
+
+  // Place the "No" button somewhere random at start
+  moveNo();
 </script>
-
 </body>
 </html>
-
